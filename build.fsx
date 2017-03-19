@@ -12,19 +12,16 @@ Target "BuildApp" (fun _ ->
             !! "src/**/*.fsproj"
             -- "src/**/*.Tests.fsproj"
             |> MSBuildRelease buildDir "Build"
-            |> Log "AppBuild-Output: "
-)
+            |> Log "AppBuild-Output: ")
 
 Target "BuildTests" (fun _ ->
         !! "src/**/*.Tests.fsproj"
         |> MSBuildDebug testDir "Build"
-        |> Log "BuildTests-Output: "
-)
+        |> Log "BuildTests-Output: ")
 
 Target "RunUnitTests" (fun _ ->
         !! (testDir + "/*.Tests.dll")
-        |> NUnit (fun p -> { p with ToolPath = nunitRunnerPath })
-)
+        |> NUnit (fun p -> { p with ToolPath = nunitRunnerPath }))
 
 "Clean"
     ==> "BuildApp"
