@@ -12,4 +12,4 @@ if [ $exit_code -ne 0 ]; then
     exit $exit_code
 fi
 
-packages/FAKE/tools/FAKE.exe $@ --fsiargs build.fsx
+packages/FAKE/tools/FAKE.exe $@ --fsiargs build.fsx --log build.log

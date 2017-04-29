@@ -295,15 +295,5 @@
  Generic test assertions.
 </summary>
 </member>
-<member name="T:FsUnit.EqualsConstraint">
-<summary>
- F#-friendly formatting for otherwise the same equals behavior (%A instead of .ToString())
-</summary>
-</member>
-<member name="T:FsUnit.TopLevelOperators.FsUnitDeprecated">
-<summary>
- Deprecated operators. These will be removed in a future version of FsUnit.
-</summary>
-</member>
 </members>
 </doc>
