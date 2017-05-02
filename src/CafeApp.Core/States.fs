@@ -16,12 +16,19 @@ let apply state event =
     match state, event with
     | ClosedTab _, TabOpened tab -> OpenedTab tab
     | OpenedTab _, OrderPlaced order -> PlacedOrder order
-    | PlacedOrder order, DrinkServed (item, _) ->
+    | PlacedOrder order, DrinkServed (drink, _) ->
         {
-            PlacedOrder = order;
-            ServedDrinks = [ item ];
-            ServedFoods = [];
-            PreparedFoods = [];
+            PlacedOrder = order
+            ServedDrinks = [ drink ]
+            ServedFoods = []
+            PreparedFoods = []
+        } |> OrderInProgress
+    | PlacedOrder order, FoodPrepared (food, _) ->
+        {
+            PlacedOrder = order
+            ServedDrinks = []
+            ServedFoods = []
+            PreparedFoods = [ food ]
         } |> OrderInProgress
     | OrderInProgress ipo, OrderServed (order, _) ->
         ServedOrder order

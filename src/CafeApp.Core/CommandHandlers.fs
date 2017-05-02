@@ -11,16 +11,22 @@ open Commands
 open Errors
 
 let (|NonOrderedDrink|_|) order drink =
-    if order.Drinks |> List.exists (fun d -> d = drink) then
-        Some drink
-    else
+    if order.Drinks |> List.contains drink then
         None
+    else
+        Some drink
 
 let (|ServeDrinkCompletesOrder|_|) order drink =
     if isServingDrinkCompletesOrder order drink then
         Some drink
     else
         None
+
+let (|NonOrderedFood|_|) order food =
+    if order.Foods |> List.contains food then
+        None
+    else
+        Some food
 
 let handleOpenTab tab = function
     | ClosedTab _ -> [ TabOpened tab ] |> ok
@@ -50,11 +56,24 @@ let handleServeDrink drink tabId = function
     | ClosedTab _ -> CannotServeWithClosedTab |> fail
     | _ -> failwith "Todo"
 
+let handlePrepareFood food tabId = function
+    | PlacedOrder order ->
+        match food with
+        | NonOrderedFood order _ ->
+            CannotPrepareNonOrderedFood food |> fail
+        | _ ->
+            [ FoodPrepared (food, tabId) ] |> ok
+    | ServedOrder _ -> OrderAlreadyServed |> fail
+    | OpenedTab _ -> CannotPrepareForNonPlacedOrder |> fail
+    | ClosedTab _ -> CannotPrepareWithClosedTab |> fail
+    | _ -> failwith "Todo" 
+
 let execute state command =
     match command with
     | OpenTab tab -> handleOpenTab tab state
     | PlaceOrder order -> handlePlaceOrder order state
     | ServeDrink (drink, tabId) -> handleServeDrink drink tabId state
+    | PrepareFood (food, tabId) -> handlePrepareFood food tabId state
     | _ -> failwith "Todo"
 
 let evolve state command =

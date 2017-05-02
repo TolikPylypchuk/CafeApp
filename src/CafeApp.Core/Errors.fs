@@ -9,5 +9,8 @@ type Error =
     | OrderAlreadyPlaced
     | OrderAlreadyServed
     | CannotServeForNonPlacedOrder
+    | CannotPrepareForNonPlacedOrder
     | CannotServeWithClosedTab
-    | CannotServeNonOrderedDrink of Drink    
+    | CannotPrepareWithClosedTab
+    | CannotServeNonOrderedDrink of Drink
+    | CannotPrepareNonOrderedFood of Food
