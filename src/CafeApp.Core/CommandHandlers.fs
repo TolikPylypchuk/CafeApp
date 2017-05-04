@@ -52,6 +52,18 @@ let (|AlreadyServedFood|_|) ipo food =
     else
         None
 
+let (|ServeDrinkCompletesIPOrder|_|) ipo drink =
+    if isServingDrinkCompletesIPOrder ipo drink then
+        Some Drink
+    else
+        None
+
+let (|ServeFoodCompletesIPOrder|_|) ipo food =
+    if isServingFoodCompletesIPOrder ipo food then
+        Some food
+    else
+        None
+
 let handleOpenTab tab = function
     | ClosedTab _ -> [ TabOpened tab ] |> ok
     | _ -> TabAlreadyOpened |> fail
@@ -77,12 +89,15 @@ let handleServeDrink drink tabId = function
         | _ -> [ event ] |> ok
     | OrderInProgress ipo ->
         let order = ipo.PlacedOrder
+        let drinkServed = DrinkServed (drink, order.Tab.Id)
         match drink with
         | NonOrderedDrink order _ ->
             CannotServeNonOrderedDrink drink |> fail
         | AlreadyServedDrink ipo _ ->
             CannotServeAlreadyServedDrink drink |> fail
-        | _ -> [ DrinkServed (drink, order.Tab.Id) ] |> ok
+        | ServeDrinkCompletesIPOrder ipo _ ->
+            drinkServed :: [ OrderServed (order, payment order) ] |> ok
+        | _ -> [ drinkServed ] |> ok
     | ServedOrder _ -> OrderAlreadyServed |> fail
     | OpenedTab _ -> CannotServeForNonPlacedOrder |> fail
     | ClosedTab _ -> CannotServeWithClosedTab |> fail
@@ -109,6 +124,7 @@ let handlePrepareFood food tabId = function
 let handleServeFood food tabId = function
     | OrderInProgress ipo ->
         let order = ipo.PlacedOrder
+        let foodServed = FoodServed (food, tabId)
         match food with
         | NonOrderedFood order _ ->
             CannotServeNonOrderedFood food |> fail
@@ -116,7 +132,9 @@ let handleServeFood food tabId = function
             CannotServeAlreadyServedFood food |> fail
         | UnpreparedFood ipo _ ->
             CannotServeNonPreparedFood food |> fail
-        | _ -> [ FoodServed (food, tabId) ] |> ok
+        | ServeFoodCompletesIPOrder ipo _ ->
+            foodServed :: [ OrderServed (order, payment order) ] |> ok
+        | _ -> [ foodServed ] |> ok
     | PlacedOrder _ -> CannotServeNonPreparedFood food |> fail
     | ServedOrder _ -> OrderAlreadyServed |> fail
     | OpenedTab _ -> CannotServeForNonPlacedOrder |> fail
