@@ -3,3 +3,5 @@ source https://www.nuget.org/api/v2
 nuget Chessie
 nuget FAKE
 nuget NEventStore
+nuget xunit
+nuget xunit.runner.console
