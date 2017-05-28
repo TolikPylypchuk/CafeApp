@@ -1,4 +1,4 @@
-module CafeApp.CommandHandlers
+module CafeApp.Core.CommandHandlers
 
 open System
 

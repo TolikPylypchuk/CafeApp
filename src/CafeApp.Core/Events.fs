@@ -1,4 +1,4 @@
-module CafeApp.Events
+module CafeApp.Core.Events
 
 open System
 

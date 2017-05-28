@@ -1,4 +1,4 @@
-module CafeApp.States
+module CafeApp.Core.States
 
 open System
 

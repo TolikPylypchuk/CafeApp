@@ -1,4 +1,4 @@
-module CafeApp.Errors
+module CafeApp.Core.Errors
 
 open Domain
 

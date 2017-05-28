@@ -1,4 +1,4 @@
-module CafeApp.Domain
+module CafeApp.Core.Domain
 
 open System
 
