@@ -48,8 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="TestData.fs" />
     <Compile Include="CafeAppTestsDSL.fs" />
     <Compile Include="OpenTabTests.fs" />
+    <Compile Include="PlaceOrderTests.fs" />
+    <Compile Include="ServeDrinkTests.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

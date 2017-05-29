@@ -6,6 +6,7 @@ open Xunit
 
 open CafeApp.Core.Commands
 open CafeApp.Core.Domain
+open CafeApp.Core.Errors
 open CafeApp.Core.Events
 open CafeApp.Core.States
 
@@ -19,3 +20,11 @@ let ``Can Open a New Tab``() =
     |> When (OpenTab tab)
     |> ThenStateShouldBe (OpenedTab tab)
     |> WithEvents [ TabOpened tab ]
+
+[<Fact>]
+let ``Cannot Open an Already Opened Tab``() =
+    let tab = { Id = Guid.NewGuid(); TableNumber = 1 }
+
+    Given (OpenedTab tab)
+    |> When (OpenTab tab)
+    |> ShouldFailWith TabAlreadyOpened
