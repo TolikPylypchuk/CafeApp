@@ -42,6 +42,26 @@ let ``Can Serve Drink for Order Containing Only One Drink``() =
     ]
 
 [<Fact>]
+let ``Remain in Order in Progress while Serving Drink``() =
+    let order = { order with Drinks = [ coke; lemonade; appleJuice ] }
+    let inProgressOrder = {
+        PlacedOrder = order
+        ServedDrinks = [ coke ]
+        PreparedFoods = []
+        ServedFoods = []
+    }
+
+    let expected = {
+        inProgressOrder with
+            ServedDrinks = lemonade :: inProgressOrder.ServedDrinks
+    }
+
+    Given (OrderInProgress inProgressOrder)
+    |> When (ServeDrink (lemonade, order.Tab.Id))
+    |> ThenStateShouldBe (OrderInProgress expected)
+    |> WithEvents [ DrinkServed (lemonade, order.Tab.Id) ]
+
+[<Fact>]
 let ``Cannot Serve Non-Ordered Drink``() =
     let order = { order with Drinks = [ coke ] }
 
@@ -60,6 +80,34 @@ let ``Cannot Serve Drink for Non-Placed Order``() =
     Given (OpenedTab tab)
     |> When (ServeDrink (coke, tab.Id))
     |> ShouldFailWith CannotServeForNonPlacedOrder
+
+[<Fact>]
+let ``Cannot Serve Non-Ordered Drink During Order in Progress``() =
+    let order = { order with Drinks = [ coke; lemonade ] }
+    let inProgressOrder = {
+        PlacedOrder = order
+        ServedDrinks = [ coke ]
+        PreparedFoods = []
+        ServedFoods = []
+    }
+
+    Given (OrderInProgress inProgressOrder)
+    |> When (ServeDrink (appleJuice, order.Tab.Id))
+    |> ShouldFailWith (CannotServeNonOrderedDrink appleJuice)
+
+[<Fact>]
+let ``Cannot Serve an Already Served Drink``() =
+    let order = { order with Drinks = [ coke; lemonade ] }
+    let inProgressOrder = {
+        PlacedOrder = order
+        ServedDrinks = [ coke ]
+        PreparedFoods = []
+        ServedFoods = []
+    }
+
+    Given (OrderInProgress inProgressOrder)
+    |> When (ServeDrink (coke, order.Tab.Id))
+    |> ShouldFailWith (CannotServeAlreadyServedDrink coke)
 
 [<Fact>]
 let ``Cannot Serve Drink with Closed Tab``() =
