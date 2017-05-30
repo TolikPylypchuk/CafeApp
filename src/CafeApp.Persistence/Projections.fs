@@ -8,7 +8,7 @@ open CafeApp.Core.Events
 type TableActions = {
     OpenTab: Tab -> Async<unit>
     ReceivedOrder: Guid -> Async<unit>
-    CloseTab: Guid -> Async<unit>
+    CloseTab: Tab -> Async<unit>
 }
 
 type ChefActions = {
@@ -67,5 +67,5 @@ let projectReadModels actions = function
         let tabId = payment.Tab.Id
         [
             actions.Cashier.Remove tabId
-            actions.Table.CloseTab tabId
+            actions.Table.CloseTab payment.Tab
         ] |> Async.Parallel
