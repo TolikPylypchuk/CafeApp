@@ -1,12 +1,15 @@
 # CafeApp/.travis.yml
 
-language: fsharp
+language: csharp
 
 mono:
 - latest
 
+install:
+- sudo apt install mono-runtime
+
 script:
-- ./build-ci.sh RunUnitTests
+- ./build-linux.sh RunUnitTests
 
 notifications:
   email: false
