@@ -2,8 +2,11 @@
 
 language: fsharp
 
+mono:
+- latest
+
 script:
-- ./build.sh RunUnitTests
+- ./build-ci.sh RunUnitTests
 
 notifications:
   email: false
