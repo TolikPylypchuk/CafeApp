@@ -1,4 +1,9 @@
 # CafeApp/.travis.yml
+
 language: fsharp
+
 script:
 - ./build.sh RunUnitTests
+
+notifications:
+  email: false
