@@ -5,9 +5,6 @@ language: csharp
 mono:
 - latest
 
-install:
-- sudo apt install mono-runtime
-
 script:
 - ./build-linux.sh RunUnitTests
 
