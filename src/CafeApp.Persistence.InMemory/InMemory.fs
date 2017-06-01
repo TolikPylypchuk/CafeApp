@@ -17,7 +17,7 @@ type InMemoryEventStore () =
               .UsingInMemoryPersistence()
               .Build()
 
-let inMemoryEventsStore () =
+let inMemoryEventStore () =
     let eventStoreInstance = InMemoryEventStore.Instance
     {
         GetState = getState eventStoreInstance

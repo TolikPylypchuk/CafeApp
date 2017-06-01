@@ -37,7 +37,7 @@ type ProjectionActions = {
     Cashier: CashierActions
 }
 
-let projectReadModels actions = function
+let projectReadModel actions = function
     | TabOpened tab ->
         [ actions.Table.OpenTab tab ] |> Async.Parallel
     | OrderPlaced order ->

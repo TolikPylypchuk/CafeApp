@@ -4,5 +4,6 @@ nuget Chessie
 nuget FAKE
 nuget FSharp.Data
 nuget NEventStore
+nuget Suave
 nuget xunit
 nuget xunit.runner.console
