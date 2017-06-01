@@ -29,6 +29,8 @@ NUGET
       System.Threading.Thread (>= 4.0) - framework: >= netstandard16
       System.Threading.ThreadPool (>= 4.0.10) - framework: >= netstandard16
       System.Threading.Timer (>= 4.0.1) - framework: >= netstandard16
+    FSharp.Data (2.3.3)
+      Zlib.Portable (>= 1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81
     Microsoft.NETCore.Platforms (1.1) - framework: >= net452, >= netstandard11, netstandard12, netstandard13, netstandard14
     Microsoft.NETCore.Targets (1.1) - framework: >= net452, >= netstandard11, netstandard12, netstandard13, netstandard14
     Microsoft.Win32.Primitives (4.3) - framework: >= net46, >= netstandard13
@@ -580,3 +582,4 @@ NUGET
       NETStandard.Library (>= 1.6) - framework: >= netstandard11
       xunit.extensibility.core (2.2) - framework: >= net452, >= netstandard11
     xunit.runner.console (2.2)
+    Zlib.Portable (1.11) - framework: >= netstandard11, portable-net45+sl5+win8, portable-net45+win8, portable-net45+win8+wp8+wpa81

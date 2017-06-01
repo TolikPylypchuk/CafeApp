@@ -35,6 +35,12 @@ let getTableByTabId tabId =
         | (Open id) | (InService id) -> id = tabId
         | _ -> false)
 
+let getTableByTableNumber tableNumber =
+    if tables.ContainsKey tableNumber then
+        tables.[tableNumber] |> Some |> async.Return
+    else
+        None |> async.Return
+
 let private receivedOrder tabId =
     match getTableByTabId tabId with
     | Some table ->
@@ -56,4 +62,5 @@ let getTables () =
 
 let tableQueries = {
     GetTables = getTables
+    GetTableByTableNumber = getTableByTableNumber
 }
