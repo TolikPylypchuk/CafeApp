@@ -9,10 +9,14 @@ open CafeApp.Persistence.Queries
 
 open CommandHandler
 open OpenTab
+open PlaceOrder
 
-let handleCommandRequest validationQueries eventStore = function
+let handleCommandRequest queries eventStore = function
     | OpenTabRequest tab ->
-        validationQueries.Table.GetTableByTableNumber
+        queries.Table.GetTableByTableNumber
         |> openTabCommander
         |> handleCommand eventStore tab
+    | PlaceOrderRequest order ->
+        placeOrderCommander queries
+        |> handleCommand eventStore order
     | _ -> "Invalid command" |> err |> fail |> async.Return
