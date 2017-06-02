@@ -33,6 +33,12 @@ let private drinks =
     })
     dict
 
+let private getItem<'a> (dict: Dictionary<int, 'a>) key =
+    if dict.ContainsKey key then
+        dict.[key] |> Some
+    else 
+        None
+
 let private getItems<'a> (dict: Dictionary<int, 'a>) keys =
     let invalidKeys = keys |> Array.except dict.Keys
     if Array.isEmpty invalidKeys then
@@ -43,16 +49,24 @@ let private getItems<'a> (dict: Dictionary<int, 'a>) keys =
     else
         invalidKeys |> Choice2Of2
 
+let getFoodByMenuNumber key =
+    getItem foods key |> async.Return
+
 let getFoodsByMenuNumbers keys =
     getItems foods keys |> async.Return
+
+let getDrinkByMenuNumber key =
+    getItem drinks key |> async.Return
 
 let getDrinksByMenuNumbers keys =
     getItems drinks keys |> async.Return
 
 let foodQueries = {
+    GetFoodByMenuNumber = getFoodByMenuNumber
     GetFoodsByMenuNumbers = getFoodsByMenuNumbers
 }
 
 let drinkQueries = {
+    GetDrinkByMenuNumber = getDrinkByMenuNumber
     GetDrinksByMenuNumbers = getDrinksByMenuNumbers
 }
