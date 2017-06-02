@@ -6,7 +6,7 @@ mono:
 - latest
 
 script:
-- ./build-linux.sh RunUnitTests
+- ./build.sh RunUnitTests
 
 notifications:
   email: false
