@@ -10,6 +10,7 @@ open CafeApp.Persistence.Queries
 open CommandHandler
 open OpenTab
 open PlaceOrder
+open PrepareFood
 open ServeDrink
 
 let handleCommandRequest queries eventStore = function
@@ -24,4 +25,8 @@ let handleCommandRequest queries eventStore = function
         queries.Drink.GetDrinkByMenuNumber
         |> serveDrinkCommander queries.Table.GetTableByTabId
         |> handleCommand eventStore (tabId, drinkMenuNumber)
+    | PrepareFoodRequest (tabId, foodMenuNumber) ->
+        queries.Food.GetFoodByMenuNumber
+        |> prepareFoodCommander queries.Table.GetTableByTabId
+        |> handleCommand eventStore (tabId, foodMenuNumber)
     | _ -> "Invalid command" |> err |> fail |> async.Return
