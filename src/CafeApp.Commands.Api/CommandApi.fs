@@ -12,6 +12,7 @@ open OpenTab
 open PlaceOrder
 open PrepareFood
 open ServeDrink
+open ServeFood
 
 let handleCommandRequest queries eventStore = function
     | OpenTabRequest tab ->
@@ -28,5 +29,9 @@ let handleCommandRequest queries eventStore = function
     | PrepareFoodRequest (tabId, foodMenuNumber) ->
         queries.Food.GetFoodByMenuNumber
         |> prepareFoodCommander queries.Table.GetTableByTabId
+        |> handleCommand eventStore (tabId, foodMenuNumber)
+    | ServeFoodRequest (tabId, foodMenuNumber) ->
+        queries.Food.GetFoodByMenuNumber
+        |> serveFoodCommander queries.Table.GetTableByTabId
         |> handleCommand eventStore (tabId, foodMenuNumber)
     | _ -> "Invalid command" |> err |> fail |> async.Return
