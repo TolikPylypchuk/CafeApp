@@ -14,6 +14,7 @@ open CafeApp.Commands.Api.CommandApi
 open CafeApp.Core.Events
 open CafeApp.Persistence.Projections
 open CafeApp.Persistence.InMemory.InMemory
+open CafeApp.Web.JsonFormatter
 
 let eventsStream = new Control.Event<Event list>()
 
@@ -30,9 +31,9 @@ let commandApiHandler eventStore (context: HttpContext) = async {
     | Ok ((state, events), _) ->
         do! eventStore.SaveEvents state events
         eventsStream.Trigger events
-        return! context |> OK (sprintf "%A" state)
+        return! context |> toStateJson state
     | Bad err ->
-        return! context |> BAD_REQUEST err.Head.Message
+        return! context |> toErrorJson err.Head
 }
 
 let commandApi eventStore =
