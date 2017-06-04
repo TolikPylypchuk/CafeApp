@@ -8,5 +8,8 @@ mono:
 script:
 - ./build.sh
 
+after_success:
+- > [ "$TRAVIS_BRANCH" == "master" ] && curl -X POST -H "Content-Type: application/json" --data '{ "docker_tag_name": "latest" }' https://registry.hub.docker.com/u/tamizhvendan/cafeapp/trigger/$DOCKER_HUB_TOKEN/
+
 notifications:
   email: false
