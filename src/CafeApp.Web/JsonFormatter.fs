@@ -10,6 +10,7 @@ open Suave.Writers
 
 open CafeApp.Commands.Api.CommandHandler
 open CafeApp.Core.Domain
+open CafeApp.Core.Events
 open CafeApp.Core.States
 open CafeApp.Persistence.ReadModels
 
@@ -138,6 +139,61 @@ let cashierToDoJObj (payment: Payment) =
         "tableNumber" .= payment.Tab.TableNumber
         "paymentAmount" .= payment.Amount
     ]
+
+let eventJObj = function
+    | TabOpened tab ->
+        jObj [
+            "event" .= "TabOpened"
+            "data" .= tabJObj tab
+        ]
+    | OrderPlaced order ->
+        jObj [
+            "event" .= "OrderPlaced"
+            "data" .= orderJObj order
+        ]
+    | DrinkServed (drink, tabId) ->
+        jObj [
+            "event" .= "DrinkServed"
+            "data" .= jObj [
+                "drink" .= drinkJObj drink
+                "tabId" .= tabId
+            ]
+        ]
+    | FoodPrepared (food, tabId) ->
+        jObj [
+            "event" .= "FoodPrepared"
+            "data" .= jObj [
+                "food" .= foodJObj food
+                "tabId" .= tabId
+            ]
+        ]
+    | FoodServed (food, tabId) ->
+        jObj [
+            "event" .= "FoodServed"
+            "data" .= jObj [
+                "food" .= foodJObj food
+                "tabId" .= tabId
+            ]
+        ]
+    | OrderServed (order, payment) ->
+        jObj [
+            "event" .= "OrderServed"
+            "data" .= jObj [
+                "order" .= orderJObj order
+                "tabId" .= order.Tab.Id
+                "tableNumber" .= order.Tab.TableNumber
+                "amount" .= payment.Amount
+            ]
+        ]
+    | TabClosed payment ->
+        jObj [
+            "event" .= "TabClosed"
+            "data" .= jObj [
+                "amountPaid" .= payment.Amount
+                "tabId" .= payment.Tab.Id
+                "tableNumber" .= payment.Tab.TableNumber
+            ]
+        ]
 
 let JSON webpart jsonString (context: HttpContext) = async {
     let wp =
