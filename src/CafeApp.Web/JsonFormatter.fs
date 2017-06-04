@@ -117,6 +117,28 @@ let tableJObj table =
         "status" .= statusJObj table.Status
     ]
 
+let chefToDoJObj (todo: ChefToDo) =
+    jObj [
+        "tabId" .= todo.Tab.Id
+        "tableNumber" .= todo.Tab.TableNumber
+        "foods" .= foodJArray todo.Foods
+    ]
+
+let waiterToDoJObj (todo: WaiterToDo) =
+    jObj [
+        "tabId" .= todo.Tab.Id
+        "tableNumber" .= todo.Tab.TableNumber
+        "foods" .= foodJArray todo.Foods
+        "drinks" .= drinkJArray todo.Drinks
+    ]
+
+let cashierToDoJObj (payment: Payment) =
+    jObj [
+        "tabId" .= payment.Tab.Id
+        "tableNumber" .= payment.Tab.TableNumber
+        "paymentAmount" .= payment.Amount
+    ]
+
 let JSON webpart jsonString (context: HttpContext) = async {
     let wp =
         webpart jsonString >=> setMimeType "application/json; charset=utf-8"
@@ -140,3 +162,13 @@ let toReadModelsJson toJObj key models =
     |> JSON OK
 
 let toTablesJson = toReadModelsJson tableJObj "tables"
+
+let toChefToDosJson = toReadModelsJson chefToDoJObj "chefToDos"
+
+let toWaiterToDosJson = toReadModelsJson waiterToDoJObj "waiterToDos"
+
+let toCashierToDosJson = toReadModelsJson cashierToDoJObj "cashierToDos"
+
+let toFoodsJson = toReadModelsJson foodJObj "foods"
+
+let toDrinksJson = toReadModelsJson drinkJObj "foods"

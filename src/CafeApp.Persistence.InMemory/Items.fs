@@ -49,6 +49,12 @@ let private getItems<'a> (dict: Dictionary<int, 'a>) keys =
     else
         invalidKeys |> Choice2Of2
 
+let getFoods () =
+    foods.Values |> Seq.toList |> async.Return
+
+let getDrinks () =
+    drinks.Values |> Seq.toList |> async.Return
+
 let getFoodByMenuNumber key =
     getItem foods key |> async.Return
 
@@ -62,11 +68,13 @@ let getDrinksByMenuNumbers keys =
     getItems drinks keys |> async.Return
 
 let foodQueries = {
+    GetFoods = getFoods
     GetFoodByMenuNumber = getFoodByMenuNumber
     GetFoodsByMenuNumbers = getFoodsByMenuNumbers
 }
 
 let drinkQueries = {
+    GetDrinks = getDrinks
     GetDrinkByMenuNumber = getDrinkByMenuNumber
     GetDrinksByMenuNumbers = getDrinksByMenuNumbers
 }
