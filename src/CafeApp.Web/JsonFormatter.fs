@@ -11,16 +11,19 @@ open Suave.Writers
 open CafeApp.Commands.Api.CommandHandler
 open CafeApp.Core.Domain
 open CafeApp.Core.States
+open CafeApp.Persistence.ReadModels
 
 let (.=) key (value: obj) = JProperty(key, value)
 
 let jObj (jProperties: JProperty list) =
-    let jObject = JObject()
+    let jObject = JObject ()
     jProperties |> List.iter jObject.Add
     jObject
 
+let stringJObj (str: string) = JObject str
+
 let jArray jObjects =
-    let jArray = JArray()
+    let jArray = JArray ()
     jObjects |> List.iter jArray.Add
     jArray
 
@@ -52,7 +55,7 @@ let foodJArray foods =
 let drinkJArray drinks =
     drinks |> List.map drinkJObj |> jArray
 
-let orderJObj order =
+let orderJObj (order: Order) =
     jObj [
         "tabId" .= order.Tab.Id
         "tableNumber" .= order.Tab.TableNumber
@@ -96,6 +99,24 @@ let stateJObj = function
             "data" .= orderJObj order
         ]
 
+let statusJObj = function
+    | Open tabId ->
+        jObj [
+            "open" .= tabId.ToString ()
+        ]
+    | InService tabId ->
+        jObj [
+            "inService" .= tabId.ToString ()
+        ]
+    | Closed -> stringJObj "closed"
+
+let tableJObj table =
+    jObj [
+        "number" .= table.Number
+        "waiter" .= table.Waiter
+        "status" .= statusJObj table.Status
+    ]
+
 let JSON webpart jsonString (context: HttpContext) = async {
     let wp =
         webpart jsonString >=> setMimeType "application/json; charset=utf-8"
@@ -107,3 +128,15 @@ let toStateJson state =
 
 let toErrorJson err =
     jObj [ "error" .= err.Message ] |> string |> JSON BAD_REQUEST
+
+let toReadModelsJson toJObj key models =
+    models
+    |> List.map toJObj
+    |> jArray
+    |> (.=) key
+    |> List.singleton
+    |> jObj
+    |> string
+    |> JSON OK
+
+let toTablesJson = toReadModelsJson tableJObj "tables"

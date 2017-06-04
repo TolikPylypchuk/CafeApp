@@ -14,7 +14,9 @@ open CafeApp.Commands.Api.CommandApi
 open CafeApp.Core.Events
 open CafeApp.Persistence.Projections
 open CafeApp.Persistence.InMemory.InMemory
-open CafeApp.Web.JsonFormatter
+
+open JsonFormatter
+open QueriesApi
 
 let eventsStream = new Control.Event<Event list>()
 
@@ -47,6 +49,7 @@ let main argv =
         let eventStore = inMemoryEventStore ()
         choose [
             commandApi eventStore
+            queriesApi inMemoryQueries eventStore
         ]
 
     let config = {
