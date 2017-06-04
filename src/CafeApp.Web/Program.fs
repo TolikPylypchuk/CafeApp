@@ -1,11 +1,14 @@
 module CafeApp.Web.Program
 
+open System.IO
+open System.Reflection
 open System.Text
 
 open Chessie.ErrorHandling
 
 open Suave
 open Suave.Control
+open Suave.Files
 open Suave.Filters
 open Suave.Operators
 open Suave.RequestErrors
@@ -49,17 +52,11 @@ let commandApi eventStore =
         >=> POST
         >=> commandApiHandler eventStore
 
-let socketHandler (ws: WebSocket) context = socket {
-    printfn "In socket handler"
-    
+let socketHandler (ws: WebSocket) context = socket {    
     while true do
         let! events =
             Async.AwaitEvent eventsStream.Publish |> ofAsync
-
-        printfn "Received events"
-
         for event in events do
-            printfn "%A" event
             let eventData =
                 event
                 |> eventJObj
@@ -68,6 +65,11 @@ let socketHandler (ws: WebSocket) context = socket {
                 |> ByteSegment
             do! ws.send Text eventData true
 }
+
+let clientDir =
+    let exePath = Assembly.GetEntryAssembly().Location
+    let exeDir = (FileInfo exePath).Directory
+    Path.Combine(exeDir.FullName, "public")
 
 [<EntryPoint>]
 let main argv =
@@ -78,10 +80,16 @@ let main argv =
                 handShake socketHandler
             commandApi eventStore
             queriesApi inMemoryQueries eventStore
+            GET >=> choose [
+                path "/" >=> browseFileHome "index.html"
+                browseHome
+            ]
+            NOT_FOUND "Resource not found."
         ]
 
     let config = {
         defaultConfig with
+            homeFolder = Some clientDir
             bindings = [ HttpBinding.createSimple HTTP "0.0.0.0" 8083 ]
     }
 

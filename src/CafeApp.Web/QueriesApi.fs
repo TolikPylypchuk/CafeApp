@@ -9,24 +9,23 @@ open CafeApp.Persistence.Queries
 
 open JsonFormatter
 
-let readModels getReadModels wp (context: HttpContext) =
-    async {
-        let! models = getReadModels ()
-        return! wp models context
-    }
+let readModels getReadModels wp (context: HttpContext) = async {
+    let! models = getReadModels ()
+    return! wp models context
+}
 
 let queriesApi queries eventStore =
     GET >=> choose [
         path "/tables" >=>
             readModels queries.Table.GetTables toTablesJson
-        path "todos/chef" >=>
+        path "/todos/chef" >=>
             readModels queries.ToDo.GetChefToDos toChefToDosJson
-        path "todos/waiter" >=>
+        path "/todos/waiter" >=>
             readModels queries.ToDo.GetWaiterToDos toWaiterToDosJson
-        path "todos/cashier" >=>
+        path "/todos/cashier" >=>
             readModels queries.ToDo.GetCashierToDos toCashierToDosJson
-        path "foods" >=>
+        path "/foods" >=>
             readModels queries.Food.GetFoods toFoodsJson
-        path "drinks" >=>
+        path "/drinks" >=>
             readModels queries.Drink.GetDrinks toDrinksJson
     ]

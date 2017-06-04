@@ -21,8 +21,6 @@ let jObj (jProperties: JProperty list) =
     jProperties |> List.iter jObject.Add
     jObject
 
-let stringJObj (str: string) = JObject str
-
 let jArray jObjects =
     let jArray = JArray ()
     jObjects |> List.iter jArray.Add
@@ -102,20 +100,20 @@ let stateJObj = function
 
 let statusJObj = function
     | Open tabId ->
-        jObj [
+        "status" .= jObj [
             "open" .= tabId.ToString ()
         ]
     | InService tabId ->
-        jObj [
+        "status" .= jObj [
             "inService" .= tabId.ToString ()
         ]
-    | Closed -> stringJObj "closed"
+    | Closed -> "status" .= "closed"
 
 let tableJObj table =
     jObj [
         "number" .= table.Number
         "waiter" .= table.Waiter
-        "status" .= statusJObj table.Status
+        statusJObj table.Status
     ]
 
 let chefToDoJObj (todo: ChefToDo) =
@@ -149,7 +147,9 @@ let eventJObj = function
     | OrderPlaced order ->
         jObj [
             "event" .= "OrderPlaced"
-            "data" .= orderJObj order
+            "data" .= jObj [
+                "order" .= orderJObj order
+            ]
         ]
     | DrinkServed (drink, tabId) ->
         jObj [
@@ -227,4 +227,4 @@ let toCashierToDosJson = toReadModelsJson cashierToDoJObj "cashierToDos"
 
 let toFoodsJson = toReadModelsJson foodJObj "foods"
 
-let toDrinksJson = toReadModelsJson drinkJObj "foods"
+let toDrinksJson = toReadModelsJson drinkJObj "drinks"

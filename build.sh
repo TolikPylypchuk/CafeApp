@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export NPM_FILE_PATH=$(which npm)
+
 mono .paket/paket.bootstrapper.exe
 exit_code=$?
 if [ $exit_code -ne 0 ]; then

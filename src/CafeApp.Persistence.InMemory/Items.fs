@@ -13,7 +13,7 @@ let private foods =
         Name = "Salad"
     })
     dict.Add(9, Food {
-        MenuNumber = 8
+        MenuNumber = 9
         Price = 10M
         Name = "Pizza"
     })
@@ -21,12 +21,12 @@ let private foods =
 
 let private drinks =
     let dict = new Dictionary<int, Drink>()
-    dict.Add(8, Drink {
+    dict.Add(10, Drink {
         MenuNumber = 10
         Price = 2.5M
         Name = "Coke"
     })
-    dict.Add(9, Drink {
+    dict.Add(11, Drink {
         MenuNumber = 11
         Price = 1.5M
         Name = "Lemonade"
